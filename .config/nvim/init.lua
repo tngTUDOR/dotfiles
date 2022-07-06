@@ -336,7 +336,7 @@ vim.o.colorcolumn = "100"
 vim.o.filetype = "on"
 
 -- miniconda python
-vim.g.python3_host_prog = "/home/navarrete_30230/miniconda3/bin/python"
+vim.g.python3_host_prog = "$HOME/miniconda3/bin/python"
 
 -- neomake + pylint
 -- when to activate neomake
