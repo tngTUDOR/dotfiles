@@ -34,7 +34,6 @@ require('packer').startup(function()
   use 'nvim-treesitter/nvim-treesitter'
   -- Additional textobjects for treesitter
   use 'nvim-treesitter/nvim-treesitter-textobjects'
-  use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
   use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
@@ -42,6 +41,14 @@ require('packer').startup(function()
   use 'averms/black-nvim' -- black formatting for python
   use 'neomake/neomake' -- to be able to use pylint with neomake
   use 'sbdchd/neoformat' -- format using prettier
+  use 'preservim/nerdcommenter' -- awesomely nerdy commenting powers 
+  use 'stsewd/isort.nvim' -- call Isort from inside
+  use 'deoplete-plugins/deoplete-clang' -- c/c++ autocomplete for clang+llvm
+  use  "williamboman/mason.nvim"
+  use  "williamboman/mason-lspconfig.nvim"
+  use  "neovim/nvim-lspconfig"
+  --use "navarasu/onedark.nvim"
+  use "doums/darcula"
 end)
 
 --Incremental live completion (note: this is now a default on master)
@@ -75,9 +82,13 @@ vim.wo.signcolumn = 'yes'
 
 --Set colorscheme (order is important here)
 --onedark 
--- vim.o.termguicolors = true
--- vim.g.onedark_terminal_italics = 2
--- vim.cmd [[colorscheme onedark]]
+--vim.o.termguicolors = true
+--vim.g.onedark_terminal_italics = 2
+--vim.cmd [[colorscheme onedark]]
+--darcula -> pycharm alike
+vim.o.termguicolors = true
+vim.cmd [[colorscheme darcula]]
+
 
 --Set statusbar
 -- vim.g.lightline = {
@@ -228,7 +239,7 @@ end
 
 -- nvim-cmp supports additional completion capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
@@ -239,6 +250,9 @@ for _, lsp in ipairs(servers) do
   }
 end
 
+require("mason").setup()
+require("mason-lspconfig").setup()
+
 -- Example custom server
 local sumneko_root_path = vim.fn.getenv 'HOME' .. '/.local/bin/sumneko_lua' -- Change to your sumneko root installation
 local sumneko_binary = sumneko_root_path .. '/bin/Linux/lua-language-server'
@@ -248,7 +262,7 @@ local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, 'lua/?.lua')
 table.insert(runtime_path, 'lua/?/init.lua')
 
-require('lspconfig').sumneko_lua.setup {
+require('lspconfig').lua_ls.setup {
   cmd = { sumneko_binary, '-E', sumneko_root_path .. '/main.lua' },
   on_attach = on_attach,
   capabilities = capabilities,
@@ -327,6 +341,8 @@ cmp.setup {
 }
 
 
+require("ibl").setup { }
+
 -- My personalisations
 
 vim.o.splitright = true
@@ -336,7 +352,7 @@ vim.o.colorcolumn = "100"
 vim.o.filetype = "on"
 
 -- miniconda python
-vim.g.python3_host_prog = "$HOME/miniconda3/bin/python"
+vim.g.python3_host_prog = "$HOME/mambaforge/bin/python3"
 
 -- neomake + pylint
 -- when to activate neomake
