@@ -352,7 +352,8 @@ vim.o.colorcolumn = "100"
 vim.o.filetype = "on"
 
 -- miniconda python
-vim.g.python3_host_prog = "$HOME/mambaforge/bin/python3"
+-- This is not necessary, neovim should pick-up the python interpreter from the $PATH
+-- vim.g.python3_host_prog = "$HOME/mambaforge/bin/python3"
 
 -- neomake + pylint
 -- when to activate neomake
