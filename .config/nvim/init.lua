@@ -49,6 +49,8 @@ require('packer').startup(function()
   use  "neovim/nvim-lspconfig"
   --use "navarasu/onedark.nvim"
   use "doums/darcula"
+  use 'nvim-tree/nvim-web-devicons'
+  use 'preservim/vim-markdown'
 end)
 
 --Incremental live completion (note: this is now a default on master)
@@ -127,11 +129,11 @@ vim.g.indent_blankline_show_trailing_blankline_indent = false
 -- Gitsigns
 require('gitsigns').setup {
   signs = {
-    add = { hl = 'GitGutterAdd', text = '+' },
-    change = { hl = 'GitGutterChange', text = '~' },
-    delete = { hl = 'GitGutterDelete', text = '_' },
-    topdelete = { hl = 'GitGutterDelete', text = '‾' },
-    changedelete = { hl = 'GitGutterChange', text = '~' },
+    add = { text = '+' },
+    change = { text = '~' },
+    delete = { text = '_' },
+    topdelete = { text = '‾' },
+    changedelete = {  text = '~' },
   },
 }
 
@@ -290,6 +292,16 @@ require('lspconfig').lua_ls.setup {
   },
 }
 
+-- clangd config
+local lspconfig = require('lspconfig')
+lspconfig.clangd.setup({
+  name = 'clangd',
+  cmd = {'clangd', '--background-index', '--clang-tidy', '--log=verbose'},
+  initialization_options = {
+    fallback_flags = { '-std=c++17' },
+  },
+})
+
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
@@ -352,8 +364,7 @@ vim.o.colorcolumn = "100"
 vim.o.filetype = "on"
 
 -- miniconda python
--- This is not necessary, neovim should pick-up the python interpreter from the $PATH
--- vim.g.python3_host_prog = "$HOME/mambaforge/bin/python3"
+vim.g.python3_host_prog = "$HOME/mambaforge/bin/python3"
 
 -- neomake + pylint
 -- when to activate neomake
@@ -372,3 +383,5 @@ vim.cmd [[
 
 -- allow use of local, per project install of prettier
 vim.g.neoformat_try_node_exe = 1
+-- markdown chakafkdown folding is nono
+vim.g.vim_markdown_folding_disabled = 1
