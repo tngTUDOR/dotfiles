@@ -38,6 +38,7 @@ require('packer').startup(function()
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
+  -- REMEMBER TO CALL :UpdateRemotePlugins when using inside envs
   use 'averms/black-nvim' -- black formatting for python
   use 'neomake/neomake' -- to be able to use pylint with neomake
   use 'sbdchd/neoformat' -- format using prettier
