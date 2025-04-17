@@ -1,58 +1,53 @@
 -- sample config from: https://github.com/nvim-lua/kickstart.nvim/blob/master/init.lua
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+-- Bootstrap lazy.nvim if needed
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
-vim.cmd [[
-  augroup Packer
-    autocmd!
-    autocmd BufWritePost init.lua PackerCompile
-  augroup end
-]]
+-- Plugin specifications
+require("lazy").setup({
+  -- Package manager
+  { "folke/lazy.nvim", version = "*" },
 
-local use = require('packer').use
-require('packer').startup(function()
-  use 'wbthomason/packer.nvim' -- Package manager
-  use 'tpope/vim-fugitive' -- Git commands in nvim
-  use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
-  use 'tpope/vim-commentary' -- "gc" to comment visual regions/lines
-  use 'ludovicchabant/vim-gutentags' -- Automatic tags management
-  -- UI to select things (files, grep results, open buffers...)
-  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  
-  -- use 'joshdick/onedark.vim' -- Theme inspired by Atom
-  use 'itchyny/lightline.vim' -- Fancier statusline
-  
-  -- Add indentation guides even on blank lines
-  use 'lukas-reineke/indent-blankline.nvim'
-  -- Add git related info in the signs columns and popups
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-  -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use 'nvim-treesitter/nvim-treesitter'
-  -- Additional textobjects for treesitter
-  use 'nvim-treesitter/nvim-treesitter-textobjects'
-  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'saadparwaiz1/cmp_luasnip'
-  use 'L3MON4D3/LuaSnip' -- Snippets plugin
-  -- REMEMBER TO CALL :UpdateRemotePlugins when using inside envs
-  use 'averms/black-nvim' -- black formatting for python
-  use 'neomake/neomake' -- to be able to use pylint with neomake
-  use 'sbdchd/neoformat' -- format using prettier
-  use 'preservim/nerdcommenter' -- awesomely nerdy commenting powers 
-  use 'stsewd/isort.nvim' -- call Isort from inside
-  use 'deoplete-plugins/deoplete-clang' -- c/c++ autocomplete for clang+llvm
-  use  "williamboman/mason.nvim"
-  use  "williamboman/mason-lspconfig.nvim"
-  use  "neovim/nvim-lspconfig"
-  --use "navarasu/onedark.nvim"
-  use "doums/darcula"
-  use 'nvim-tree/nvim-web-devicons'
-  use 'preservim/vim-markdown'
-end)
+  { "tpope/vim-fugitive" },
+  { "tpope/vim-rhubarb" },
+  { "tpope/vim-commentary" },
+  { "ludovicchabant/vim-gutentags" },
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" }
+  },
+  { "itchyny/lightline.vim" },
+  { "lukas-reineke/indent-blankline.nvim", name = "ibl" },
+  {
+    "lewis6991/gitsigns.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" }
+  },
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+  { "nvim-treesitter/nvim-treesitter-textobjects" },
+  { "hrsh7th/nvim-cmp" },
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "saadparwaiz1/cmp_luasnip" },
+  { "L3MON4D3/LuaSnip" },
+  { "averms/black-nvim" },
+  { "neomake/neomake" },
+  { "sbdchd/neoformat" },
+  { "preservim/nerdcommenter" },
+  { "stsewd/isort.nvim" },
+  { "deoplete-plugins/deoplete-clang" },
+  { "williamboman/mason.nvim" },
+  { "williamboman/mason-lspconfig.nvim" },
+  { "neovim/nvim-lspconfig" },
+  { "doums/darcula" },
+  { "nvim-tree/nvim-web-devicons" },
+  { "preservim/vim-markdown" },
+})
 
 --Incremental live completion (note: this is now a default on master)
 vim.o.inccommand = 'nosplit'
