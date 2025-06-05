@@ -10,33 +10,9 @@ export ZSH=$HOME/.oh-my-zsh
 #POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs anaconda)
 #ZSH_THEME="powerlevel9k/powerlevel9k"
 
-SPACESHIP_TIME_SHOW=true
-SPACESHIP_GIT_BRANCH_SHOW_COMMIT=true
-SPACESHIP_GIT_BRANCH_SHOW_TAG=true
-ZSH_THEME="materialshell"
-#ZSH_THEME="spaceship"
-SPACESHIP_PROMPT_ORDER=(
-  time          # Time stamps section
-  user          # Username section
-  dir           # Current directory section
-  host          # Hostname section
-  git           # Git section (git_branch + git_status)
-#  node          # Node.js section
-  #golang        # Go section
-  #julia         # Julia section
-  docker        # Docker section
-  conda         # conda virtualenv section
-#  kubecontext   # Kubectl context section
-  exec_time     # Execution time
-  line_sep      # Line break
-#  battery       # Battery level and status
-  vi_mode       # Vi-mode indicator
-  jobs          # Background jobs indicator
-  exit_code     # Exit code section
-  char          # Prompt character
-)
-
-
+#ZSH_THEME="materialshell"
+ZSH_THEME="spaceship"
+source ~/.spaceshiprc.zsh
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
 # cause zsh load theme from this variable instead of
@@ -100,16 +76,17 @@ plugins=(
 #  kubectl
   zsh-autosuggestions
   zsh-syntax-highlighting
-  poetry
+  spaceship-vi-mode
+  virtualenv
 )
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 
 
 source $ZSH/oh-my-zsh.sh
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
+export PATH=~/.local/bin/:$PATH
 
 # You may need to manually set your language environment
 export LANG=en_GB.UTF-8
@@ -119,7 +96,7 @@ if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
   export GPG_TTY=$(tty)
 else
-  export EDITOR='nvim'
+  export EDITOR='nvim.appimage'
 fi
 
 # Compilation flags
@@ -141,12 +118,17 @@ export SSH_KEY_PATH="~/.ssh/id_rsa"
 #
 alias vtop="vtop --theme gruvbox"
 
+# kitty in ubuntu 22 is broken, using local one
+alias kittyl="$HOME/.local/kitty.app/bin/kitty"
+
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
 
 # alias tips exclusions
 export ZSH_PLUGINS_ALIAS_TIPS_EXCLUDES="_ ll gloga"
 
-export LESSOPEN="| /usr/bin/src-hilite-lesspipe.sh %s"
+
+
+export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
 export LESS=' -R '
 
 # GO path
@@ -168,22 +150,47 @@ export PATH="$HOME/gems/bin:$PATH"
 # Add cargo generated binnaries to path
 export PATH="$HOME/.cargo/bin:$PATH"
 
+# Add sonar scanner
+export PATH="$HOME/.local/share/sonar-scanner/bin:$PATH"
+
 # dot files
 alias config="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('$HOME/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/navarrete_31625/mambaforge/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/navarrete_31625/mambaforge/etc/profile.d/conda.sh" ]; then
+        . "/home/navarrete_31625/mambaforge/etc/profile.d/conda.sh"
     else
-        export PATH="$HOME/miniconda3/bin:$PATH"
+        export PATH="/home/navarrete_31625/mambaforge/bin:$PATH"
     fi
 fi
 unset __conda_setup
+
+if [ -f "/home/navarrete_31625/mambaforge/etc/profile.d/mamba.sh" ]; then
+    . "/home/navarrete_31625/mambaforge/etc/profile.d/mamba.sh"
+fi
 # <<< conda initialize <<<
 
+# ubuntu specific stuff
+alias bat="/usr/bin/batcat"
+alias nvim="$HOME/.local/bin/nvim.appimage"
+
+# eza is the new ls
+alias ll="eza -l --git"
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+#export REQUESTS_CA_BUNDLE=$HOME/netskope_certs/Netskope.pem
+#export CURL_CA_BUNDLE=$HOME/netskope_certs/Netskope.pem
+#export NODE_EXTRA_CA_CERTS=$HOME/netskope_certs/Netskope.pem
+
+
+. "$HOME/.local/bin/env"
